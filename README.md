@@ -1,5 +1,5 @@
-## Coursera Exploratory Data Analysis ##
+# Coursera Exploratory Data Analysis
 
-Hi, I'm Hyunjoo Kim.
+## Welcome to the Jooyaroedu Repository.
 
-# Welcome to the Jooyaroedu Repository.
+Hi, I'm Hyunjoo Kim from S.Korea.
