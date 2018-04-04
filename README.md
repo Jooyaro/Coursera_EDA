@@ -1,17 +1,35 @@
 # <Coursera-Exploratory Data Analysis> Peer-graded Assignment: Course Project 1
 
 ## plot1 ##
-#1 Loading the data & convert the variables
+#1 Loading the data & Converting the variables
 mydata<-read.table('household_power_consumption.txt',skip=1, sep=';')
-colnames(mydata)<-c('date','time','global_active_power','global_reactive_power','voltage','global_intensity', 'sub_metering_1','sub_metering_2','sub_metering_3')
+colnames(mydata)<-c('Date','Time','Global_active_power','Global_reactive_power','Voltage','Global_intensity', 'Sub_metering_1','Sub_metering_2','Sub_metering_3')
 
-#2 choose the part of data
+#2 Choose the part of data
 mydata<-subset(mydata, date=='1/2/2007'|date=='2/2/2007')
 attach(mydata)
 
-#3 histogram
-hist(as.numeric(as.character(global_active_power)), xlab='Global Active Power(kilowatts)',main='Global Active Power',col='red')
+#3 Plotting
+hist(as.numeric(as.character(Global_active_power)), xlab='Global Active Power(kilowatts)',main='Global Active Power',col='red')
 
-#4 copy and save the image
+#4 Copy and save the image
 dev.copy(png,file='plot1.png', width=480, height=480)
 dev.off()
+
+
+## plot2 ##
+#1 Loading the data & Converting the variables
+mydata<-read.table('household_power_consumption.txt',skip=1,sep=';')
+colnames(mydata)<-c('Date','Time','Global_active_power','Global_reactive_power','Voltage','Global_intensity', 'Sub_metering_1','Sub_metering_2','Sub_metering_3')
+
+#2 Choose the part of data
+mydata2<-subset(mydata, Date=='1/2/2007'|Date=='2/2/2007')
+attach(mydata2)
+
+#3 Plotting
+date<-strptime(paste(Date, Time, sep=" "), "%d/%m/%Y %H:%M:%S")
+plot(date, as.numeric(as.character(Global_active_power, type="l", xlab="", ylab="Global Active Power (kilowatts)"))
+
+#4 Save the plot in a PNG File
+dev.copy(png,file="plot2.png",width=480,height=480)
+dev.off() 
