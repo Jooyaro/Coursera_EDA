@@ -1,0 +1,153 @@
+<PLOT1>
+##Step1 Set work directory & Read files
+setwd("C:/Users/hyunj/OneDrive/바탕 화면/현주방/수업자료/2018년 1학기/EDA(Coursera)/Week4")
+NEI<-readRDS('summarySCC_PM25.rds')
+SCC<-readRDS('Source_Classification_Code.rds')
+
+##Step2 Subset NEI file by years
+q1sub1<-subset(NEI,year==1999)
+q1sub2<-subset(NEI,year==2002)
+q1sub3<-subset(NEI,year==2005)
+q1sub4<-subset(NEI,year==2008)
+
+##Step3 Sum up the emissions by years and make them as a dataframe
+q1y<-c(sum(q1sub1['Emissions']),sum(q1sub2['Emissions']),sum(q1sub3['Emissions']),sum(q1sub4['Emissions']))
+q1d<-data.frame(year=c(1999,2002,2005,2008),q1y)
+
+##Step 4 Barplot
+barplot(q1d$q1y,
+main='Total PM2.5 emissions from all sources',
+xlab='Year',ylab='Total PM2.5 emissions',names.arg=c('1999','2002','2005','2008'),
+col='lightblue')
+
+##Step 5 Save the image file
+dev.copy(png,file='plot1.png',height=480,width=480)
+dev.off()
+
+
+<PLOT2>
+##Step1 Subset NEI file by region code(Baltimore City) and years
+q2sub1<-subset(NEI,fips==24510 & year==1999)
+q2sub2<-subset(NEI,fips==24510 & year==2002)
+q2sub3<-subset(NEI,fips==24510 & year==2005)
+q2sub4<-subset(NEI,fips==24510 & year==2008)
+
+##Step2 Sum up the emissions by years and make them as a dataframe
+q2y<-c(sum(q2sub1['Emissions']),sum(q2sub2['Emissions']),sum(q2sub3['Emissions']),sum(q2sub4['Emissions']))
+q2d<-data.frame(year=c(1999,2002,2005,2008),q2y)
+
+##Step3 Barplot
+barplot(q2d$q2y,main='Total PM2.5 emissions in Baltimore City',xlab='Year',
+          + ylab='Total PM2.5 emissions(Balitmore City)',names.arg=c('1999','2002','2005','2008'),
+          + col='lightyellow')
+
+##Step4 Save the image file
+dev.copy(png,file='plot2.png',height=480,width=480)
+dev.off()
+
+
+<PLOT3>
+##Step1 Call library
+library(ggplot2)
+
+##Step2 Subset NEI file by region code(Baltimore City)
+q3sub<-subset(NEI,fips==24510)
+
+##Step3 Drawing ggplot
+g<-ggplot(q3sub,aes(q3sub$year,q3sub$Emissions,fill=type))
+g+geom_bar(stat='identity')+labs(x='Year')+labs(y='Total PM2.5 emissions(Baltimore City)')+labs(title='Total PM2.5 Emissions in Baltimore City')+scale_x_continuous(breaks=unique(q3sub$year))
+
+##Step4 Save
+dev.copy(png,file='plot3.png',height=480,width=480)
+dev.off()
+
+
+<PLOT4>
+##Step1 Use grep function to get the rows that contains 'Coal' word
+temp<-SCC[grep('Coal',SCC$EI.Sector,value=FALSE,ignore.case=TRUE),1]
+
+##Step2 Make a dataframe by subsetting NEI file that contains the rows in the above temp file
+q4sub=data.frame()
+for(i in 1:length(temp)){
+q4sub<-rbind(q4sub,subset(NEI,SCC==temp[i]))
+}
+
+##Step3 Subset dataframe from Step2 by years
+q4sub1<-subset(q4sub,year==1999)
+q4sub2<-subset(q4sub,year==2002)
+q4sub3<-subset(q4sub,year==2005)
+q4sub4<-subset(q4sub,year==2008)
+
+##Step4 Sum up the emissions by years and make a dataframe
+q4y<-c(sum(q4sub1['Emissions']),sum(q4sub2['Emissions']),sum(q4sub3['Emissions']),sum(q4sub4['Emissions']))
+q4d<-data.frame(year=c(1999,2002,2005,2008),q4y)
+
+##Step5 Barplot
+barplot(q4d$q4y,
+main='Emissions from coal combustion-related sources in U.S.',
+xlab='Year',ylab='Emissions from coal combustion-related sources',names.arg=c('1999','2002','2005','2008'),
+col='lightblue')
+
+##Step6 Save
+dev.copy(png,file='plot4.png',height=480,width=480)
+dev.off()
+
+
+<PLOT5>
+##Step1 Use grep function to get the rows that contains 'Mobile' word
+temp<-SCC[grep('Mobile',SCC$EI.Sector,value=FALSE,ignore.case=TRUE),1]
+
+##Step2 Subset from NEI file by regional code(Baltimore City) and row numbers in the above temp dataframe
+q5sub<-subset(NEI,fips=='24510'& SCC%in%temp)
+
+##Step3 Subset dataframe from Step2 by years
+q5sub1<-subset(q5sub,year==1999)
+q5sub2<-subset(q5sub,year==2002)
+q5sub3<-subset(q5sub,year==2005)
+q5sub4<-subset(q5sub,year==2008)
+
+##Step4 Sum up the emissions by years and make a dataframe
+q5y<-c(sum(q5sub1['Emissions']),sum(q5sub2['Emissions']),sum(q5sub3['Emissions']),sum(q5sub4['Emissions']))
+q5d<-data.frame(year=c(1999,2002,2005,2008),q5y)
+
+##Step5 Barplot
+barplot(q5d$q5y,
+main='Emissions from motor vehicle sources in Baltimore City',
+xlab='Year',ylab='Emissions from motor vehicle sources(Baltimore City)',names.arg=c('1999','2002','2005','2008'),
+col='lightgreen')
+
+##Step6 Save
+dev.copy(png,file='plot5.png',height=480,width=480)
+dev.off()
+
+
+<PLOT6>
+##Step1 Follow the steps from <PLOT5>
+
+##Step2 Subset from NEI file by regional code(Los Angeles) and row numbers in the above temp dataframe
+q6sub<-subset(NEI,fips=='06037' & SCC%in%temp)
+
+##Step3 Subset dataframe from Step2 by years
+q6sub1<-subset(q6sub,year==1999)
+q6sub2<-subset(q6sub,year==2002)
+q6sub3<-subset(q6sub,year==2005)
+q6sub4<-subset(q6sub,year==2008)
+
+##Step4 Sum up the emissions by years and make a dataframe
+q6y<-c(sum(q6sub1['Emissions']),sum(q6sub2['Emissions']),sum(q6sub3['Emissions']),sum(q6sub4['Emissions']))
+q6d<-data.frame(year=c(1999,2002,2005,2008),q6y)
+
+##Step5 Barplots
+par(mfrow=c(1,2))
+barplot(q5d$q5y,
+main='Emissions from motor vehicle sources in Baltimore City',
+xlab='Year',ylab='Emissions from motor vehicle sources(Baltimore City)',names.arg=c('1999','2002','2005','2008'),
+ylim=c(0,10000),col='lightgreen')
+barplot(q6d$q6y,
+main='Emissions from motor vehicle sources in L.A.',
+xlab='Year',ylab='Emissions from motor vehicle sources(L.A.)',names.arg=c('1999','2002','2005','2008'),
+col='lightgreen')
+
+##Step6 Save
+dev.copy(png,file='plot6.png',height=480,width=960)
+dev.off()
